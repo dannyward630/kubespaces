@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Inter, Space_Grotesk } from "next/font/google";
-import { SiteHeader } from "@/components/layout/SiteHeader";
+import { auth, signOut } from "@/auth";
+import { Sidebar } from "@/components/layout/Sidebar";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -24,22 +26,52 @@ export const metadata: Metadata = {
     "Open control plane for virtual Kubernetes tenants. Create a tenant, get a cluster.",
 };
 
-export default function RootLayout({
+const APP_VERSION = process.env.APP_VERSION ?? "dev";
+
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const session = await auth();
+
+  async function handleSignOut() {
+    "use server";
+    await signOut({ redirectTo: "/" });
+  }
+
   return (
     <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable}`}>
-      <body className="flex min-h-dvh flex-col">
-        <SiteHeader />
-        <main className="mx-auto w-full max-w-4xl flex-1 px-6 py-12">
-          {children}
-        </main>
-        <footer className="border-t border-rule">
-          <div className="mx-auto flex max-w-4xl items-baseline justify-between px-6 py-5 text-xs text-ink-faint">
-            <span>KubeSpaces — open control plane for virtual Kubernetes tenants</span>
-            <span className="tabular-nums">v0.1</span>
+      <body className="bg-paper text-ink">
+        {session?.user ? (
+          <div className="flex h-dvh overflow-hidden">
+            <Sidebar
+              email={session.user.email ?? session.user.name ?? "account"}
+              version={APP_VERSION}
+              onSignOut={handleSignOut}
+            />
+            <div className="flex-1 overflow-y-auto">
+              <main className="mx-auto w-full max-w-5xl px-8 py-10">{children}</main>
+            </div>
           </div>
-        </footer>
+        ) : (
+          <div className="flex min-h-dvh flex-col">
+            <header className="border-b border-rule">
+              <div className="mx-auto flex max-w-5xl items-center px-6 py-5">
+                <Link
+                  href="/"
+                  className="font-display text-lg font-semibold tracking-tight text-ink transition-colors hover:text-accent"
+                >
+                  KubeSpaces
+                  <span aria-hidden="true" className="ml-1.5 text-accent">
+                    ⌁
+                  </span>
+                </Link>
+              </div>
+            </header>
+            <main className="mx-auto w-full max-w-4xl flex-1 px-6 py-12">
+              {children}
+            </main>
+          </div>
+        )}
       </body>
     </html>
   );
