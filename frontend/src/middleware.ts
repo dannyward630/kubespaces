@@ -8,5 +8,10 @@ export default auth((request) => {
 });
 
 export const config = {
-  matcher: ["/tenants/:path*"],
+  matcher: [
+    "/tenants/:path*",
+    "/organizations/:path*",
+    "/projects/:path*",
+    "/admin/:path*",
+  ],
 };

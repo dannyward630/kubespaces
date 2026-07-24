@@ -13,9 +13,38 @@ const API_BASE = (
 ).replace(/\/$/, "");
 
 const DNS1123 = "[a-z0-9]([-a-z0-9]*[a-z0-9])?";
-const ALLOWED_PATHS = new RegExp(
-  `^(me|tenants|tenants/${DNS1123}|tenants/${DNS1123}/kubeconfig)$`,
-);
+// Each dynamic segment is [^/]+ (no slash → no path injection). The set below
+// is the exact tenancy/tenant/admin surface the portal calls.
+const S = "[^/]+";
+const ALLOWED_PATHS: RegExp[] = [
+  /^me$/,
+  /^tenants$/,
+  new RegExp(`^tenants/${DNS1123}$`),
+  new RegExp(`^tenants/${DNS1123}/kubeconfig$`),
+  // Organizations
+  /^organizations$/,
+  /^organizations\/default$/,
+  new RegExp(`^organizations/by-name/${S}$`),
+  /^organizations\/invitations$/,
+  new RegExp(`^organizations/invitations/${S}/(accept|decline)$`),
+  new RegExp(`^organizations/${S}$`),
+  new RegExp(`^organizations/${S}/(default|stats|users|projects|invitations)$`),
+  new RegExp(`^organizations/${S}/users/${S}$`),
+  new RegExp(`^organizations/${S}/users/${S}/role$`),
+  // Projects
+  /^projects$/,
+  /^projects\/invitations$/,
+  new RegExp(`^projects/invitations/${S}/(accept|decline)$`),
+  new RegExp(`^projects/${S}$`),
+  new RegExp(`^projects/${S}/(quotas|stats|users|invitations)$`),
+  new RegExp(`^projects/${S}/users/${S}$`),
+  new RegExp(`^projects/${S}/users/${S}/role$`),
+  // Admin
+  /^admin\/users$/,
+  new RegExp(`^admin/users/${S}/admin$`),
+];
+
+const pathAllowed = (joined: string) => ALLOWED_PATHS.some((re) => re.test(joined));
 
 async function resolveAccessToken(
   request: NextRequest,
@@ -46,7 +75,7 @@ async function proxy(
 ): Promise<NextResponse> {
   const { path } = await context.params;
   const joined = path.join("/");
-  if (!ALLOWED_PATHS.test(joined)) {
+  if (!pathAllowed(joined)) {
     return NextResponse.json({ error: "not found" }, { status: 404 });
   }
 

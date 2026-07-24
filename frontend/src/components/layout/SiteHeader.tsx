@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { auth, signOut } from "@/auth";
+import { PortalNav } from "@/components/layout/PortalNav";
 
 export async function SiteHeader() {
   const session = await auth();
@@ -7,15 +8,18 @@ export async function SiteHeader() {
   return (
     <header className="border-b border-rule">
       <div className="mx-auto flex max-w-4xl items-baseline justify-between px-6 py-5">
-        <Link
-          href={session ? "/tenants" : "/"}
-          className="font-display text-lg font-semibold tracking-tight text-ink transition-colors hover:text-accent"
-        >
-          KubeSpaces
-          <span aria-hidden="true" className="ml-1.5 text-accent">
-            ⌁
-          </span>
-        </Link>
+        <div className="flex items-baseline gap-8">
+          <Link
+            href={session ? "/tenants" : "/"}
+            className="font-display text-lg font-semibold tracking-tight text-ink transition-colors hover:text-accent"
+          >
+            KubeSpaces
+            <span aria-hidden="true" className="ml-1.5 text-accent">
+              ⌁
+            </span>
+          </Link>
+          {session?.user && <PortalNav />}
+        </div>
 
         {session?.user && (
           <div className="flex items-baseline gap-5">

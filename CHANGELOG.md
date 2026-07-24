@@ -19,6 +19,9 @@ All notable changes to KubeSpaces are documented here. The format follows
     with role-based access control and JIT user provisioning from the OIDC
     token. Endpoint contract mirrors `login-api` minus the local-auth routes
     Keycloak replaces.
+  - Portal UI: Organizations and Projects sections (list/detail), member and
+    role management, invitations (send + accept/decline pending), quota
+    editing, and a platform-admin Users page — gated by the caller's role.
 
 ## [0.8.0] — 2026-07-24
 
