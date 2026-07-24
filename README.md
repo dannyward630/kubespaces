@@ -2,9 +2,15 @@
 
 > The open control plane for virtual Kubernetes tenants.
 
+[![Release](https://img.shields.io/github/v/release/kubespaces-io/kubespaces?sort=semver&color=3730a3&label=release)](https://github.com/kubespaces-io/kubespaces/releases/latest)
+[![CI](https://github.com/kubespaces-io/kubespaces/actions/workflows/ci.yml/badge.svg)](https://github.com/kubespaces-io/kubespaces/actions/workflows/ci.yml)
+[![E2E](https://github.com/kubespaces-io/kubespaces/actions/workflows/e2e.yml/badge.svg)](https://github.com/kubespaces-io/kubespaces/actions/workflows/e2e.yml)
+[![Build & images](https://github.com/kubespaces-io/kubespaces/actions/workflows/build.yml/badge.svg)](https://github.com/kubespaces-io/kubespaces/actions/workflows/build.yml)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
+
 **[Docs](https://docs.kubespaces.io)** · [Roadmap](ROADMAP.md) · [Project board](https://github.com/orgs/kubespaces-io/projects/3) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md)
 
-[![CI](https://github.com/kubespaces-io/kubespaces/actions/workflows/ci.yml/badge.svg)](https://github.com/kubespaces-io/kubespaces/actions/workflows/ci.yml) [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
+**English** · [简体中文](README.zh-CN.md) · [Italiano](README.it.md)
 
 This is the KubeSpaces monorepo: backend API, Tenant operator, web frontend,
 and the umbrella Helm chart that deploys a complete installation.

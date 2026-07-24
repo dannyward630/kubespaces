@@ -22,6 +22,27 @@ All notable changes to KubeSpaces are documented here. The format follows
   - Portal UI: Organizations and Projects sections (list/detail), member and
     role management, invitations (send + accept/decline pending), quota
     editing, and a platform-admin Users page — gated by the caller's role.
+- `frontend.publicUrl` value — canonical browser-facing base URL for OAuth
+  callbacks (sets `AUTH_URL`); left empty, Auth.js infers it from the request.
+
+### Changed
+- **Portal UI redesign**: a console-style left-sidebar shell (organization
+  switcher, grouped nav, user menu), a Dashboard overview with aggregate stat
+  cards, tenant stat cards on the Tenants page, and an optional dark theme.
+
+### Fixed
+- **Portal login works from `helm install`** — no manual patching. The chart
+  now wires the frontend's Auth.js environment: an auto-generated `AUTH_SECRET`
+  (persisted across upgrades, overridable via `frontend.authSecret` /
+  `frontend.existingSecret`), `AUTH_KEYCLOAK_ISSUER` (the same issuer the API
+  validates against), and `AUTH_KEYCLOAK_ID`. Previously the frontend shipped
+  with none of these, so next-auth failed to initialize.
+- **Frontend proxy target corrected**: `KUBESPACES_API_URL` was `/api`, which
+  the server-side Next.js route handler can't fetch. It now points at the
+  in-cluster API Service (`http://<release>-api:<port>`).
+- **Footer shows the real version**: the frontend footer was hardcoded to
+  `v0.1`. It now reads `APP_VERSION`, baked into the image at build time from
+  the release tag (goreleaser/metadata-action), and falls back to `dev`.
 
 ## [0.8.0] — 2026-07-24
 
