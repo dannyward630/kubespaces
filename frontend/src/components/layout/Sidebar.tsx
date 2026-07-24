@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { getMe, listOrganizations } from "@/lib/api";
 import type { Organization } from "@/lib/types";
+import { ThemeToggle } from "@/components/layout/ThemeToggle";
 
 interface NavItem {
   href: string;
@@ -66,7 +67,7 @@ export function Sidebar({ email, version, onSignOut }: SidebarProps) {
   return (
     <aside className="flex h-dvh w-64 shrink-0 flex-col border-r border-rule bg-paper-raised">
       {/* Brand */}
-      <div className="flex h-16 items-center gap-2 border-b border-rule px-5">
+      <div className="flex h-16 items-center justify-between border-b border-rule px-5">
         <Link
           href="/tenants"
           className="font-display text-lg font-semibold tracking-tight text-ink transition-colors hover:text-accent"
@@ -76,6 +77,7 @@ export function Sidebar({ email, version, onSignOut }: SidebarProps) {
             ⌁
           </span>
         </Link>
+        <ThemeToggle />
       </div>
 
       {/* Org switcher */}

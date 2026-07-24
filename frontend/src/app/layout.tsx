@@ -3,7 +3,11 @@ import Link from "next/link";
 import { Inter, Space_Grotesk } from "next/font/google";
 import { auth, signOut } from "@/auth";
 import { Sidebar } from "@/components/layout/Sidebar";
+import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import "./globals.css";
+
+// Applied before paint so the saved/system theme doesn't flash.
+const THEME_INIT = `(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':matchMedia('(prefers-color-scheme:dark)').matches;if(d)document.documentElement.classList.add('dark');}catch(e){}})();`;
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -39,7 +43,14 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable}`}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${spaceGrotesk.variable} ${inter.variable}`}
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
+      </head>
       <body className="bg-paper text-ink">
         {session?.user ? (
           <div className="flex h-dvh overflow-hidden">
@@ -55,7 +66,7 @@ export default async function RootLayout({
         ) : (
           <div className="flex min-h-dvh flex-col">
             <header className="border-b border-rule">
-              <div className="mx-auto flex max-w-5xl items-center px-6 py-5">
+              <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-5">
                 <Link
                   href="/"
                   className="font-display text-lg font-semibold tracking-tight text-ink transition-colors hover:text-accent"
@@ -65,6 +76,7 @@ export default async function RootLayout({
                     ⌁
                   </span>
                 </Link>
+                <ThemeToggle />
               </div>
             </header>
             <main className="mx-auto w-full max-w-4xl flex-1 px-6 py-12">

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { CreateTenantDialog } from "@/components/tenants/CreateTenantDialog";
 import { PhaseBadge } from "@/components/tenants/PhaseBadge";
+import { TenantStats } from "@/components/tenants/TenantStats";
 import { useTenants } from "@/hooks/useTenants";
 import { formatAge } from "@/lib/format";
 
@@ -59,7 +60,13 @@ export function TenantList() {
       )}
 
       {tenants !== null && tenants.length > 0 && (
-        <table className="mt-2 w-full border-collapse">
+        <div className="mt-6">
+          <TenantStats tenants={tenants} />
+        </div>
+      )}
+
+      {tenants !== null && tenants.length > 0 && (
+        <table className="mt-8 w-full border-collapse">
           <thead>
             <tr className="text-left text-[0.6875rem] font-medium uppercase tracking-[0.12em] text-ink-faint">
               <th scope="col" className="py-3 pr-4 font-medium">

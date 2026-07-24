@@ -26,6 +26,31 @@
   --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
+/* Dark theme: override the palette variables so every `bg-paper`, `text-ink`,
+   badge, etc. flips automatically. Toggled by the `.dark` class on <html>. */
+.dark {
+  color-scheme: dark;
+
+  --color-paper: #14120d;
+  --color-paper-raised: #1e1b14;
+  --color-ink: #f3efe6;
+  --color-ink-muted: #a8a091;
+  --color-ink-faint: #6f695b;
+  --color-rule: #322d24;
+
+  --color-accent: #a5a0f5;
+  --color-accent-hover: #b8b4f8;
+
+  --color-status-amber: #d9a441;
+  --color-status-amber-bg: #33280f;
+  --color-status-green: #5bbd7e;
+  --color-status-green-bg: #16301f;
+  --color-status-red: #e07a72;
+  --color-status-red-bg: #3a1c1a;
+  --color-status-gray: #a29e93;
+  --color-status-gray-bg: #2a2820;
+}
+
 body {
   background-color: var(--color-paper);
   color: var(--color-ink);
