@@ -39,7 +39,7 @@ func seedTenant(fs *fakeStore, fc *fakeCluster, name, owner, phase string) {
 
 func doRequest(t *testing.T, claims *auth.Claims, fs *fakeStore, fc *fakeCluster, method, path, body string) *httptest.ResponseRecorder {
 	t.Helper()
-	srv := New(fs, fc, fakeAuth(claims))
+	srv := New(fs, nil, fc, fakeAuth(claims))
 	var reader *strings.Reader
 	if body == "" {
 		reader = strings.NewReader("")
@@ -369,7 +369,7 @@ func TestHealthzNoAuth(t *testing.T) {
 			w.WriteHeader(http.StatusUnauthorized)
 		})
 	}
-	srv := New(newFakeStore(), newFakeCluster(), reject)
+	srv := New(newFakeStore(), nil, newFakeCluster(), reject)
 
 	// Act
 	req := httptest.NewRequest(http.MethodGet, "/healthz", nil)

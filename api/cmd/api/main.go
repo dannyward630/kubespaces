@@ -67,7 +67,8 @@ func run() error {
 		return fmt.Errorf("configure kubernetes client: %w", err)
 	}
 
-	srv := server.New(store.New(pool), cluster, authenticator.Middleware)
+	st := store.New(pool)
+	srv := server.New(st, st, cluster, authenticator.Middleware)
 	httpServer := &http.Server{
 		Addr:              cfg.ListenAddr,
 		Handler:           srv.Router(),

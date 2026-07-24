@@ -573,6 +573,33 @@ func (s *Store) ListProjectMembers(ctx context.Context, projectID string) ([]Mem
 	return scanMembers(ctx, s, q, projectID)
 }
 
+// OrgStats returns counts of projects, members, and tenants for an org.
+func (s *Store) OrgStats(ctx context.Context, orgID string) (projects, members, tenants int, err error) {
+	err = s.pool.QueryRow(ctx, `
+		SELECT
+		  (SELECT count(*) FROM projects WHERE organization_id = $1),
+		  (SELECT count(*) FROM user_organizations WHERE organization_id = $1),
+		  (SELECT count(*) FROM tenants WHERE organization_id = $1 AND deleted_at IS NULL)`,
+		orgID).Scan(&projects, &members, &tenants)
+	if err != nil {
+		return 0, 0, 0, fmt.Errorf("org stats: %w", err)
+	}
+	return projects, members, tenants, nil
+}
+
+// ProjectStats returns counts of members and tenants for a project.
+func (s *Store) ProjectStats(ctx context.Context, projectID string) (members, tenants int, err error) {
+	err = s.pool.QueryRow(ctx, `
+		SELECT
+		  (SELECT count(*) FROM project_users WHERE project_id = $1),
+		  (SELECT count(*) FROM tenants WHERE project_id = $1 AND deleted_at IS NULL)`,
+		projectID).Scan(&members, &tenants)
+	if err != nil {
+		return 0, 0, fmt.Errorf("project stats: %w", err)
+	}
+	return members, tenants, nil
+}
+
 func scanMembers(ctx context.Context, s *Store, q string, args ...any) ([]Member, error) {
 	rows, err := s.pool.Query(ctx, q, args...)
 	if err != nil {
