@@ -81,10 +81,14 @@ jobs:
       - uses: azure/setup-helm@v4
       - uses: sigstore/cosign-installer@v3
 
-      - name: Login to ghcr
-        run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | \
-            helm registry login "${REGISTRY}" -u "${{ github.actor }}" --password-stdin
+      # Authenticate the Docker config (~/.docker/config.json), which BOTH
+      # `helm push` and `cosign` read — `helm registry login` only writes
+      # helm's own store, leaving cosign unauthenticated to push the signature.
+      - uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Package and push chart
         id: push
