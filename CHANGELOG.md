@@ -7,6 +7,29 @@ All notable changes to KubeSpaces are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+- **Tenancy model**: `organizations → projects → tenants` with members, roles,
+  and invitations, ported from the pre-open-source `login-api` and adapted so
+  Keycloak owns identity (users are a JIT-provisioned projection). See
+  [docs/design/tenancy.md](docs/design/tenancy.md).
+  - Schema `0002_tenancy.sql` + `store` repository (orgs, projects,
+    memberships, invitations, users).
+  - REST API: org/project CRUD, membership + role management, org/project
+    invitations (send/accept/decline), and platform-admin user management,
+    with role-based access control and JIT user provisioning from the OIDC
+    token. Endpoint contract mirrors `login-api` minus the local-auth routes
+    Keycloak replaces.
+  - Portal UI: Organizations and Projects sections (list/detail), member and
+    role management, invitations (send + accept/decline pending), quota
+    editing, and a platform-admin Users page — gated by the caller's role.
+- `frontend.publicUrl` value — canonical browser-facing base URL for OAuth
+  callbacks (sets `AUTH_URL`); left empty, Auth.js infers it from the request.
+
+### Changed
+- **Portal UI redesign**: a console-style left-sidebar shell (organization
+  switcher, grouped nav, user menu), a Dashboard overview with aggregate stat
+  cards, tenant stat cards on the Tenants page, and an optional dark theme.
+
 ### Fixed
 - **Portal login works from `helm install`** — no manual patching. The chart
   now wires the frontend's Auth.js environment: an auto-generated `AUTH_SECRET`
@@ -20,10 +43,6 @@ All notable changes to KubeSpaces are documented here. The format follows
 - **Footer shows the real version**: the frontend footer was hardcoded to
   `v0.1`. It now reads `APP_VERSION`, baked into the image at build time from
   the release tag (goreleaser/metadata-action), and falls back to `dev`.
-
-### Added
-- `frontend.publicUrl` value — canonical browser-facing base URL for OAuth
-  callbacks (sets `AUTH_URL`); left empty, Auth.js infers it from the request.
 
 ## [0.8.0] — 2026-07-24
 
