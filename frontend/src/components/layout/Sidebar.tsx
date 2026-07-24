@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
+  LayoutDashboard,
   Boxes,
   Building2,
   ShieldCheck,
@@ -52,6 +53,7 @@ export function Sidebar({ email, version, onSignOut }: SidebarProps) {
     {
       label: "Main",
       items: [
+        { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
         { href: "/tenants", label: "Tenants", icon: Boxes },
         { href: "/organizations", label: "Organizations", icon: Building2 },
       ],
@@ -69,7 +71,7 @@ export function Sidebar({ email, version, onSignOut }: SidebarProps) {
       {/* Brand */}
       <div className="flex h-16 items-center justify-between border-b border-rule px-5">
         <Link
-          href="/tenants"
+          href="/dashboard"
           className="font-display text-lg font-semibold tracking-tight text-ink transition-colors hover:text-accent"
         >
           KubeSpaces

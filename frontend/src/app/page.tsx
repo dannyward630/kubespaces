@@ -3,7 +3,7 @@ import { auth, signIn } from "@/auth";
 
 export default async function LandingPage() {
   const session = await auth();
-  if (session) redirect("/tenants");
+  if (session) redirect("/dashboard");
 
   return (
     <section aria-labelledby="landing-heading" className="py-16 sm:py-24">
@@ -26,7 +26,7 @@ export default async function LandingPage() {
         className="mt-12"
         action={async () => {
           "use server";
-          await signIn("keycloak", { redirectTo: "/tenants" });
+          await signIn("keycloak", { redirectTo: "/dashboard" });
         }}
       >
         <button
