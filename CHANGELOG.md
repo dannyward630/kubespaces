@@ -7,6 +7,8 @@ All notable changes to KubeSpaces are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.9.0] — 2026-07-25
+
 ### Added
 - **Tenancy model**: `organizations → projects → tenants` with members, roles,
   and invitations, ported from the pre-open-source `login-api` and adapted so
@@ -24,8 +26,20 @@ All notable changes to KubeSpaces are documented here. The format follows
     editing, and a platform-admin Users page — gated by the caller's role.
 - `frontend.publicUrl` value — canonical browser-facing base URL for OAuth
   callbacks (sets `AUTH_URL`); left empty, Auth.js infers it from the request.
+- **Chart published as an OCI artifact** (#21): release tags push a
+  cosign-signed chart to `oci://ghcr.io/kubespaces-io/charts/kubespaces`, so the
+  quickstart `helm install kubespaces oci://…` works as documented.
+- **`networking.*` chart values + production gateway-stack guide** (#17): a
+  shared home for the domain, gateway references, cluster-issuer, and
+  external-dns target — wired as backward-compatible defaults behind the
+  existing `operator.tenantApi`/`tenantApps` keys — plus
+  [docs/guides/gateway-stack.md](docs/guides/gateway-stack.md) covering Envoy
+  Gateway, cert-manager (DNS-01 wildcard), and external-dns.
 
 ### Changed
+- **Operator: TLSRoute migrated to `gateway.networking.k8s.io/v1`** (#23):
+  Gateway API 1.5 GA. Raises the floor to Gateway API ≥ 1.5 CRDs (and
+  Kubernetes ≥ 1.31 for TLSRoute CEL validation).
 - **Portal UI redesign**: a console-style left-sidebar shell (organization
   switcher, grouped nav, user menu), a Dashboard overview with aggregate stat
   cards, tenant stat cards on the Tenants page, and an optional dark theme.
@@ -151,7 +165,8 @@ First public release. 🎉
 - **vCluster supply chain**: chart pinned (0.35.2) and installed from the
   KubeSpaces OCI mirror `ghcr.io/kubespaces-io/charts/vcluster`
 
-[Unreleased]: https://github.com/kubespaces-io/kubespaces/compare/v0.8.0...HEAD
+[Unreleased]: https://github.com/kubespaces-io/kubespaces/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/kubespaces-io/kubespaces/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/kubespaces-io/kubespaces/compare/v0.3.0...v0.8.0
 [0.3.0]: https://github.com/kubespaces-io/kubespaces/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/kubespaces-io/kubespaces/compare/v0.1.1...v0.2.0
