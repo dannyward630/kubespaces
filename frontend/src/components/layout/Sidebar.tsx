@@ -13,6 +13,7 @@ import {
   ChevronsUpDown,
   ChevronRight,
   Check,
+  PanelLeftClose,
   type LucideIcon,
 } from "lucide-react";
 import { getMe, listOrganizations, listTenants, listProjects } from "@/lib/api";
@@ -23,9 +24,10 @@ interface SidebarProps {
   email: string;
   version: string;
   onSignOut: () => void;
+  onCollapse?: () => void;
 }
 
-export function Sidebar({ email, version, onSignOut }: SidebarProps) {
+export function Sidebar({ email, version, onSignOut, onCollapse }: SidebarProps) {
   const pathname = usePathname();
   const [isAdmin, setIsAdmin] = useState(false);
   const [orgs, setOrgs] = useState<Organization[]>([]);
@@ -86,7 +88,19 @@ export function Sidebar({ email, version, onSignOut }: SidebarProps) {
           KubeSpaces
           <span aria-hidden="true" className="ml-1.5 text-accent">⌁</span>
         </Link>
-        <ThemeToggle />
+        <div className="flex items-center gap-0.5">
+          <ThemeToggle />
+          {onCollapse && (
+            <button
+              type="button"
+              onClick={onCollapse}
+              aria-label="Collapse sidebar"
+              className="rounded-md p-1.5 text-ink-muted transition-colors hover:bg-ink/5 hover:text-ink"
+            >
+              <PanelLeftClose className="size-4" strokeWidth={2} />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Org switcher */}

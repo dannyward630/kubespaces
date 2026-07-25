@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Inter, Space_Grotesk } from "next/font/google";
 import { auth, signOut } from "@/auth";
-import { Sidebar } from "@/components/layout/Sidebar";
+import { AppShell } from "@/components/layout/AppShell";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import "./globals.css";
 
@@ -53,16 +53,13 @@ export default async function RootLayout({
       </head>
       <body className="bg-paper text-ink">
         {session?.user ? (
-          <div className="flex h-dvh overflow-hidden">
-            <Sidebar
-              email={session.user.email ?? session.user.name ?? "account"}
-              version={APP_VERSION}
-              onSignOut={handleSignOut}
-            />
-            <div className="flex-1 overflow-y-auto">
-              <main className="mx-auto w-full max-w-5xl px-8 py-10">{children}</main>
-            </div>
-          </div>
+          <AppShell
+            email={session.user.email ?? session.user.name ?? "account"}
+            version={APP_VERSION}
+            onSignOut={handleSignOut}
+          >
+            {children}
+          </AppShell>
         ) : (
           <div className="flex min-h-dvh flex-col">
             <header className="border-b border-rule">

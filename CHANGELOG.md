@@ -13,6 +13,10 @@ All notable changes to KubeSpaces are documented here. The format follows
   projects. Branches auto-open to the current route (open a tenant → Tenants
   expands with it highlighted) and each has its own expand/collapse toggle, so
   you can jump straight to any tenant, org, or project.
+- **Collapsible sidebar**: a collapse button hides the sidebar to give the
+  content full width (a floating button brings it back). On narrow viewports
+  (< 1024px) the sidebar auto-collapses into an overlay drawer with a backdrop,
+  so the portal is usable on small screens.
 
 ## [0.9.1] — 2026-07-25
 
