@@ -7,6 +7,15 @@ All notable changes to KubeSpaces are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.9.4] — 2026-07-25
+
+### Changed
+- **Dependency maintenance.** Bumped the Kubernetes client libraries (the `k8s`
+  group — 6 updates across the api, operator, and CLI) and refreshed the CI
+  actions: `actions/setup-go` 5→7, `github/codeql-action` 3→4,
+  `docker/setup-qemu-action` 3→4, `azure/setup-helm` 4→5, and
+  `goreleaser/goreleaser-action` 6→7. No functional or API changes.
+
 ## [0.9.3] — 2026-07-25
 
 ### Added
@@ -194,7 +203,8 @@ First public release. 🎉
 - **vCluster supply chain**: chart pinned (0.35.2) and installed from the
   KubeSpaces OCI mirror `ghcr.io/kubespaces-io/charts/vcluster`
 
-[Unreleased]: https://github.com/kubespaces-io/kubespaces/compare/v0.9.3...HEAD
+[Unreleased]: https://github.com/kubespaces-io/kubespaces/compare/v0.9.4...HEAD
+[0.9.4]: https://github.com/kubespaces-io/kubespaces/compare/v0.9.3...v0.9.4
 [0.9.3]: https://github.com/kubespaces-io/kubespaces/compare/v0.9.2...v0.9.3
 [0.9.2]: https://github.com/kubespaces-io/kubespaces/compare/v0.9.1...v0.9.2
 [0.9.1]: https://github.com/kubespaces-io/kubespaces/compare/v0.9.0...v0.9.1
