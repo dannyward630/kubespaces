@@ -7,6 +7,11 @@ All notable changes to KubeSpaces are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+- **Brand logo** — the KubeSpaces cube mark and wordmark now appear across the
+  portal (sidebar, sign-in page, and browser favicon) and at the top of the
+  README (English, 简体中文, Italiano). Brand assets live in `assets/`.
+
 ## [0.9.2] — 2026-07-25
 
 ### Changed

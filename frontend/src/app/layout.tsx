@@ -66,12 +66,11 @@ export default async function RootLayout({
               <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-5">
                 <Link
                   href="/"
-                  className="font-display text-lg font-semibold tracking-tight text-ink transition-colors hover:text-accent"
+                  className="flex items-center gap-2 font-display text-lg font-semibold tracking-tight text-ink transition-colors hover:text-accent"
                 >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/logo-mark.png" alt="" className="h-7 w-auto" />
                   KubeSpaces
-                  <span aria-hidden="true" className="ml-1.5 text-accent">
-                    ⌁
-                  </span>
                 </Link>
                 <ThemeToggle />
               </div>

@@ -7,6 +7,8 @@ export default async function LandingPage() {
 
   return (
     <section aria-labelledby="landing-heading" className="py-16 sm:py-24">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/logo-mark.png" alt="KubeSpaces" className="mb-8 h-14 w-auto" />
       <p className="text-[0.6875rem] font-medium uppercase tracking-[0.24em] text-accent">
         KubeSpaces — self-service portal
       </p>

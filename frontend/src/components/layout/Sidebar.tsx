@@ -83,10 +83,11 @@ export function Sidebar({ email, version, onSignOut, onCollapse }: SidebarProps)
       <div className="flex h-16 items-center justify-between border-b border-rule px-5">
         <Link
           href="/dashboard"
-          className="font-display text-lg font-semibold tracking-tight text-ink transition-colors hover:text-accent"
+          className="flex items-center gap-2 font-display text-lg font-semibold tracking-tight text-ink transition-colors hover:text-accent"
         >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo-mark.png" alt="" className="h-7 w-auto" />
           KubeSpaces
-          <span aria-hidden="true" className="ml-1.5 text-accent">⌁</span>
         </Link>
         <div className="flex items-center gap-0.5">
           <ThemeToggle />

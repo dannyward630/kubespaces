@@ -1,16 +1,26 @@
-# KubeSpaces
+<p align="center">
+  <img src="assets/logo.png" alt="KubeSpaces" width="340">
+</p>
 
-> The open control plane for virtual Kubernetes tenants.
+<p align="center">
+  <strong>The open control plane for virtual Kubernetes tenants.</strong>
+</p>
 
-[![Release](https://img.shields.io/github/v/release/kubespaces-io/kubespaces?sort=semver&color=3730a3&label=release)](https://github.com/kubespaces-io/kubespaces/releases/latest)
-[![CI](https://github.com/kubespaces-io/kubespaces/actions/workflows/ci.yml/badge.svg)](https://github.com/kubespaces-io/kubespaces/actions/workflows/ci.yml)
-[![E2E](https://github.com/kubespaces-io/kubespaces/actions/workflows/e2e.yml/badge.svg)](https://github.com/kubespaces-io/kubespaces/actions/workflows/e2e.yml)
-[![Build & images](https://github.com/kubespaces-io/kubespaces/actions/workflows/build.yml/badge.svg)](https://github.com/kubespaces-io/kubespaces/actions/workflows/build.yml)
-[![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
+<p align="center">
+  <a href="https://github.com/kubespaces-io/kubespaces/releases/latest"><img src="https://img.shields.io/github/v/release/kubespaces-io/kubespaces?sort=semver&color=3730a3&label=release" alt="Release"></a>
+  <a href="https://github.com/kubespaces-io/kubespaces/actions/workflows/ci.yml"><img src="https://github.com/kubespaces-io/kubespaces/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/kubespaces-io/kubespaces/actions/workflows/e2e.yml"><img src="https://github.com/kubespaces-io/kubespaces/actions/workflows/e2e.yml/badge.svg" alt="E2E"></a>
+  <a href="https://github.com/kubespaces-io/kubespaces/actions/workflows/build.yml"><img src="https://github.com/kubespaces-io/kubespaces/actions/workflows/build.yml/badge.svg" alt="Build &amp; images"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue" alt="License"></a>
+</p>
 
-**[Docs](https://docs.kubespaces.io)** · [Roadmap](ROADMAP.md) · [Project board](https://github.com/orgs/kubespaces-io/projects/3) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md)
+<p align="center">
+  <strong><a href="https://docs.kubespaces.io">Docs</a></strong> · <a href="ROADMAP.md">Roadmap</a> · <a href="https://github.com/orgs/kubespaces-io/projects/3">Project board</a> · <a href="CONTRIBUTING.md">Contributing</a> · <a href="SECURITY.md">Security</a>
+</p>
 
-**English** · [简体中文](README.zh-CN.md) · [Italiano](README.it.md)
+<p align="center">
+  <strong>English</strong> · <a href="README.zh-CN.md">简体中文</a> · <a href="README.it.md">Italiano</a>
+</p>
 
 This is the KubeSpaces monorepo: backend API, Tenant operator, web frontend,
 and the umbrella Helm chart that deploys a complete installation.

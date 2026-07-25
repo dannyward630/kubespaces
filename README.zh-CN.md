@@ -1,16 +1,26 @@
-# KubeSpaces
+<p align="center">
+  <img src="assets/logo.png" alt="KubeSpaces" width="340">
+</p>
 
-> 面向虚拟 Kubernetes 租户的开放控制平面。
+<p align="center">
+  <strong>面向虚拟 Kubernetes 租户的开放控制平面。</strong>
+</p>
 
-[![Release](https://img.shields.io/github/v/release/kubespaces-io/kubespaces?sort=semver&color=3730a3&label=release)](https://github.com/kubespaces-io/kubespaces/releases/latest)
-[![CI](https://github.com/kubespaces-io/kubespaces/actions/workflows/ci.yml/badge.svg)](https://github.com/kubespaces-io/kubespaces/actions/workflows/ci.yml)
-[![E2E](https://github.com/kubespaces-io/kubespaces/actions/workflows/e2e.yml/badge.svg)](https://github.com/kubespaces-io/kubespaces/actions/workflows/e2e.yml)
-[![Build & images](https://github.com/kubespaces-io/kubespaces/actions/workflows/build.yml/badge.svg)](https://github.com/kubespaces-io/kubespaces/actions/workflows/build.yml)
-[![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
+<p align="center">
+  <a href="https://github.com/kubespaces-io/kubespaces/releases/latest"><img src="https://img.shields.io/github/v/release/kubespaces-io/kubespaces?sort=semver&color=3730a3&label=release" alt="Release"></a>
+  <a href="https://github.com/kubespaces-io/kubespaces/actions/workflows/ci.yml"><img src="https://github.com/kubespaces-io/kubespaces/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/kubespaces-io/kubespaces/actions/workflows/e2e.yml"><img src="https://github.com/kubespaces-io/kubespaces/actions/workflows/e2e.yml/badge.svg" alt="E2E"></a>
+  <a href="https://github.com/kubespaces-io/kubespaces/actions/workflows/build.yml"><img src="https://github.com/kubespaces-io/kubespaces/actions/workflows/build.yml/badge.svg" alt="Build &amp; images"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue" alt="License"></a>
+</p>
 
-**[文档](https://docs.kubespaces.io)** · [路线图](ROADMAP.md) · [项目看板](https://github.com/orgs/kubespaces-io/projects/3) · [贡献指南](CONTRIBUTING.md) · [安全](SECURITY.md)
+<p align="center">
+  <strong><a href="https://docs.kubespaces.io">文档</a></strong> · <a href="ROADMAP.md">路线图</a> · <a href="https://github.com/orgs/kubespaces-io/projects/3">项目看板</a> · <a href="CONTRIBUTING.md">贡献指南</a> · <a href="SECURITY.md">安全</a>
+</p>
 
-[English](README.md) · **简体中文** · [Italiano](README.it.md)
+<p align="center">
+  <a href="README.md">English</a> · <strong>简体中文</strong> · <a href="README.it.md">Italiano</a>
+</p>
 
 这是 KubeSpaces 单体仓库（monorepo）：后端 API、租户 Operator、Web 前端，
 以及一键部署完整环境的 umbrella Helm chart。
