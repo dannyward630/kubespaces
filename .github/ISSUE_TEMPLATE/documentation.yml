@@ -1,0 +1,24 @@
+name: Documentation
+description: Report a problem or gap in the docs
+labels: [documentation, triage]
+body:
+  - type: input
+    id: location
+    attributes:
+      label: Page or location
+      description: URL on docs.kubespaces.io or a path under docs/
+      placeholder: https://docs.kubespaces.io/guides/gateway-stack/
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What's wrong or missing
+      description: Unclear, outdated, incorrect, or absent — describe it.
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested fix
+      description: Optional — how you'd improve it (a sentence or a PR link).

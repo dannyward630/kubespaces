@@ -3,3 +3,6 @@ contact_links:
   - name: Security vulnerability
     url: https://github.com/kubespaces-io/kubespaces/security/advisories/new
     about: Report privately — never in a public issue. See SECURITY.md.
+  - name: Documentation
+    url: https://docs.kubespaces.io
+    about: Guides, concepts, and reference — your answer may already be there.
