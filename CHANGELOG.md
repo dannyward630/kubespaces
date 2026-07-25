@@ -7,6 +7,15 @@ All notable changes to KubeSpaces are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.9.1] — 2026-07-25
+
+### Fixed
+- **OCI chart is now cosign-signed on release.** The chart-publish job
+  authenticated with `helm registry login`, which cosign can't read, so signing
+  failed with `UNAUTHORIZED` (the chart still published, unsigned). It now uses
+  `docker/login-action`, authenticating both `helm push` and `cosign`. (0.9.0's
+  chart is published but unsigned; 0.9.1 onward is signed.)
+
 ## [0.9.0] — 2026-07-25
 
 ### Added
@@ -165,7 +174,8 @@ First public release. 🎉
 - **vCluster supply chain**: chart pinned (0.35.2) and installed from the
   KubeSpaces OCI mirror `ghcr.io/kubespaces-io/charts/vcluster`
 
-[Unreleased]: https://github.com/kubespaces-io/kubespaces/compare/v0.9.0...HEAD
+[Unreleased]: https://github.com/kubespaces-io/kubespaces/compare/v0.9.1...HEAD
+[0.9.1]: https://github.com/kubespaces-io/kubespaces/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/kubespaces-io/kubespaces/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/kubespaces-io/kubespaces/compare/v0.3.0...v0.8.0
 [0.3.0]: https://github.com/kubespaces-io/kubespaces/compare/v0.2.0...v0.3.0
