@@ -1,0 +1,24 @@
+# Code owners for KubeSpaces.
+# Matched owners are auto-requested for review on PRs touching these paths.
+# Later patterns win, so keep the global rule first and refine below.
+# Docs: https://docs.github.com/articles/about-code-owners
+#
+# All owners are on @kubespaces-io/main-team today; split areas out to more
+# specific owners/teams as the maintainer group grows.
+
+# Default owner for everything.
+*                       @kubespaces-io/main-team
+
+# Components
+/api/                   @kubespaces-io/main-team
+/operator/              @kubespaces-io/main-team
+/frontend/              @kubespaces-io/main-team
+/spacectl/              @kubespaces-io/main-team
+/charts/                @kubespaces-io/main-team
+/docs/                  @kubespaces-io/main-team
+
+# Release-, CI-, and security-sensitive surfaces
+/.github/               @kubespaces-io/main-team
+/SECURITY.md            @kubespaces-io/main-team
+/RELEASING.md           @kubespaces-io/main-team
+/CHANGELOG.md           @kubespaces-io/main-team
