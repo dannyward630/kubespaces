@@ -7,6 +7,13 @@ All notable changes to KubeSpaces are documented here. The format follows
 
 ## [Unreleased]
 
+### Changed
+- **Dynamic sidebar navigation**: the portal sidebar is now a collapsible tree.
+  Tenants expands to your tenants; Organizations expands to each org and its
+  projects. Branches auto-open to the current route (open a tenant → Tenants
+  expands with it highlighted) and each has its own expand/collapse toggle, so
+  you can jump straight to any tenant, org, or project.
+
 ## [0.9.1] — 2026-07-25
 
 ### Fixed

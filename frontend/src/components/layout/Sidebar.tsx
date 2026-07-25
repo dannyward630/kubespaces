@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   LayoutDashboard,
   Boxes,
@@ -11,23 +11,13 @@ import {
   BookOpen,
   LogOut,
   ChevronsUpDown,
+  ChevronRight,
   Check,
   type LucideIcon,
 } from "lucide-react";
-import { getMe, listOrganizations } from "@/lib/api";
-import type { Organization } from "@/lib/types";
+import { getMe, listOrganizations, listTenants, listProjects } from "@/lib/api";
+import type { Organization, Tenant, Project } from "@/lib/types";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
-
-interface NavItem {
-  href: string;
-  label: string;
-  icon: LucideIcon;
-}
-
-interface NavGroup {
-  label: string;
-  items: NavItem[];
-}
 
 interface SidebarProps {
   email: string;
@@ -39,32 +29,51 @@ export function Sidebar({ email, version, onSignOut }: SidebarProps) {
   const pathname = usePathname();
   const [isAdmin, setIsAdmin] = useState(false);
   const [orgs, setOrgs] = useState<Organization[]>([]);
+  const [tenants, setTenants] = useState<Tenant[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [open, setOpen] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    getMe()
-      .then((me) => setIsAdmin(me.roles?.includes("kubespaces-admin") ?? false))
-      .catch(() => setIsAdmin(false));
-    listOrganizations()
-      .then(setOrgs)
-      .catch(() => setOrgs([]));
+    getMe().then((me) => setIsAdmin(me.roles?.includes("kubespaces-admin") ?? false)).catch(() => {});
+    listOrganizations().then(setOrgs).catch(() => {});
+    listTenants().then(setTenants).catch(() => {});
+    listProjects().then(setProjects).catch(() => {});
   }, []);
 
-  const groups: NavGroup[] = [
-    {
-      label: "Main",
-      items: [
-        { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-        { href: "/tenants", label: "Tenants", icon: Boxes },
-        { href: "/organizations", label: "Organizations", icon: Building2 },
-      ],
-    },
-  ];
-  if (isAdmin) {
-    groups.push({
-      label: "Platform",
-      items: [{ href: "/admin", label: "Users", icon: ShieldCheck }],
+  const projectsByOrg = useMemo(() => {
+    const map: Record<string, Project[]> = {};
+    for (const p of projects) (map[p.organizationId] ??= []).push(p);
+    return map;
+  }, [projects]);
+
+  // Auto-expand the branches on the active path (without collapsing the ones
+  // the user opened manually).
+  useEffect(() => {
+    const keys: string[] = [];
+    if (pathname.startsWith("/tenants")) keys.push("tenants");
+    if (pathname.startsWith("/organizations")) {
+      keys.push("organizations");
+      const m = pathname.match(/^\/organizations\/([^/]+)/);
+      if (m) keys.push(`org:${m[1]}`);
+    }
+    if (pathname.startsWith("/projects/")) {
+      const pid = pathname.split("/")[2];
+      const org = projects.find((p) => p.id === pid)?.organizationId;
+      if (org) keys.push("organizations", `org:${org}`);
+    }
+    if (keys.length) setOpen((prev) => new Set([...prev, ...keys]));
+  }, [pathname, projects]);
+
+  const toggle = useCallback((key: string) => {
+    setOpen((prev) => {
+      const next = new Set(prev);
+      next.has(key) ? next.delete(key) : next.add(key);
+      return next;
     });
-  }
+  }, []);
+
+  const isActive = (href: string) => pathname === href;
+  const inSection = (prefix: string) => pathname === prefix || pathname.startsWith(`${prefix}/`);
 
   return (
     <aside className="flex h-dvh w-64 shrink-0 flex-col border-r border-rule bg-paper-raised">
@@ -75,9 +84,7 @@ export function Sidebar({ email, version, onSignOut }: SidebarProps) {
           className="font-display text-lg font-semibold tracking-tight text-ink transition-colors hover:text-accent"
         >
           KubeSpaces
-          <span aria-hidden="true" className="ml-1.5 text-accent">
-            ⌁
-          </span>
+          <span aria-hidden="true" className="ml-1.5 text-accent">⌁</span>
         </Link>
         <ThemeToggle />
       </div>
@@ -87,38 +94,86 @@ export function Sidebar({ email, version, onSignOut }: SidebarProps) {
         <OrgSwitcher orgs={orgs} />
       </div>
 
-      {/* Nav */}
+      {/* Nav tree */}
       <nav className="flex-1 overflow-y-auto px-3 py-4">
-        {groups.map((group) => (
-          <div key={group.label} className="mb-6">
-            <p className="px-2 pb-2 text-[0.625rem] font-semibold uppercase tracking-[0.14em] text-ink-faint">
-              {group.label}
-            </p>
-            <ul className="flex flex-col gap-0.5">
-              {group.items.map((item) => {
-                const active =
-                  pathname === item.href || pathname.startsWith(`${item.href}/`);
-                const Icon = item.icon;
+        <GroupLabel>Main</GroupLabel>
+        <ul className="mb-6 flex flex-col gap-0.5">
+          <li>
+            <RowLink href="/dashboard" icon={LayoutDashboard} active={isActive("/dashboard")}>
+              Dashboard
+            </RowLink>
+          </li>
+
+          {/* Tenants */}
+          <li>
+            <Branch
+              href="/tenants"
+              icon={Boxes}
+              label="Tenants"
+              active={inSection("/tenants")}
+              open={open.has("tenants")}
+              onToggle={() => toggle("tenants")}
+              hasChildren={tenants.length > 0}
+            >
+              {tenants.map((t) => (
+                <SubLink key={t.name} href={`/tenants/${t.name}`} active={isActive(`/tenants/${t.name}`)}>
+                  {t.name}
+                </SubLink>
+              ))}
+            </Branch>
+          </li>
+
+          {/* Organizations → projects */}
+          <li>
+            <Branch
+              href="/organizations"
+              icon={Building2}
+              label="Organizations"
+              active={inSection("/organizations")}
+              open={open.has("organizations")}
+              onToggle={() => toggle("organizations")}
+              hasChildren={orgs.length > 0}
+            >
+              {orgs.map((o) => {
+                const orgProjects = projectsByOrg[o.id] ?? [];
+                const orgActive =
+                  isActive(`/organizations/${o.id}`) ||
+                  orgProjects.some((p) => isActive(`/projects/${p.id}`));
                 return (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      className={
-                        "flex items-center gap-2.5 rounded-md px-2.5 py-2 text-sm font-medium transition-colors " +
-                        (active
-                          ? "bg-accent/10 text-accent"
-                          : "text-ink-muted hover:bg-ink/5 hover:text-ink")
-                      }
-                    >
-                      <Icon className="size-4 shrink-0" strokeWidth={2} />
-                      {item.label}
-                    </Link>
-                  </li>
+                  <Branch
+                    key={o.id}
+                    href={`/organizations/${o.id}`}
+                    label={o.name}
+                    nested
+                    active={orgActive}
+                    open={open.has(`org:${o.id}`)}
+                    onToggle={() => toggle(`org:${o.id}`)}
+                    hasChildren={orgProjects.length > 0}
+                  >
+                    {orgProjects.map((p) => (
+                      <SubLink key={p.id} href={`/projects/${p.id}`} active={isActive(`/projects/${p.id}`)} nested>
+                        {p.name}
+                      </SubLink>
+                    ))}
+                  </Branch>
                 );
               })}
+            </Branch>
+          </li>
+        </ul>
+
+        {isAdmin && (
+          <>
+            <GroupLabel>Platform</GroupLabel>
+            <ul className="flex flex-col gap-0.5">
+              <li>
+                <RowLink href="/admin" icon={ShieldCheck} active={inSection("/admin")}>
+                  Users
+                </RowLink>
+              </li>
             </ul>
-          </div>
-        ))}
+          </>
+        )}
       </nav>
 
       {/* Support + user */}
@@ -137,9 +192,7 @@ export function Sidebar({ email, version, onSignOut }: SidebarProps) {
             {initials(email)}
           </span>
           <span className="min-w-0 flex-1">
-            <span className="block truncate text-[0.8125rem] font-medium text-ink">
-              {email}
-            </span>
+            <span className="block truncate text-[0.8125rem] font-medium text-ink">{email}</span>
             <span className="block text-[0.6875rem] tabular-nums text-ink-faint">
               {version === "dev" ? "dev" : `v${version}`}
             </span>
@@ -155,6 +208,114 @@ export function Sidebar({ email, version, onSignOut }: SidebarProps) {
         </div>
       </div>
     </aside>
+  );
+}
+
+function GroupLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="px-2 pb-2 text-[0.625rem] font-semibold uppercase tracking-[0.14em] text-ink-faint">
+      {children}
+    </p>
+  );
+}
+
+const rowBase = "flex items-center gap-2.5 rounded-md px-2.5 py-2 text-sm font-medium transition-colors";
+const activeCls = "bg-accent/10 text-accent";
+const idleCls = "text-ink-muted hover:bg-ink/5 hover:text-ink";
+
+function RowLink({
+  href,
+  icon: Icon,
+  active,
+  children,
+}: {
+  href: string;
+  icon: LucideIcon;
+  active: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link href={href} className={`${rowBase} ${active ? activeCls : idleCls}`}>
+      <Icon className="size-4 shrink-0" strokeWidth={2} />
+      {children}
+    </Link>
+  );
+}
+
+/** An expandable nav row: a link (icon + label) plus a chevron that toggles
+ *  its collapsible children. `nested` renders it one indent level deeper. */
+function Branch({
+  href,
+  icon: Icon,
+  label,
+  active,
+  open,
+  onToggle,
+  hasChildren,
+  nested = false,
+  children,
+}: {
+  href: string;
+  icon?: LucideIcon;
+  label: string;
+  active: boolean;
+  open: boolean;
+  onToggle: () => void;
+  hasChildren: boolean;
+  nested?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <div className={`group flex items-center rounded-md ${active ? activeCls : idleCls}`}>
+        <Link
+          href={href}
+          className={`flex min-w-0 flex-1 items-center gap-2.5 py-2 pr-1 text-sm font-medium ${nested ? "pl-8" : "pl-2.5"}`}
+        >
+          {Icon && <Icon className="size-4 shrink-0" strokeWidth={2} />}
+          <span className="truncate">{label}</span>
+        </Link>
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-label={open ? `Collapse ${label}` : `Expand ${label}`}
+          aria-expanded={open}
+          disabled={!hasChildren}
+          className="mr-1 rounded p-1 text-ink-faint transition-colors hover:text-ink disabled:opacity-0"
+        >
+          <ChevronRight className={`size-3.5 transition-transform ${open ? "rotate-90" : ""}`} strokeWidth={2.5} />
+        </button>
+      </div>
+      {open && hasChildren && <ul className="mt-0.5 flex flex-col gap-0.5">{children}</ul>}
+    </div>
+  );
+}
+
+function SubLink({
+  href,
+  active,
+  nested = false,
+  children,
+}: {
+  href: string;
+  active: boolean;
+  nested?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <li>
+      <Link
+        href={href}
+        className={
+          "flex items-center gap-2 rounded-md py-1.5 pr-2 text-[0.8125rem] transition-colors " +
+          (nested ? "pl-11 " : "pl-8 ") +
+          (active ? "font-medium text-accent" : "text-ink-muted hover:bg-ink/5 hover:text-ink")
+        }
+      >
+        <span aria-hidden className={`size-1.5 shrink-0 rounded-full ${active ? "bg-accent" : "bg-ink-faint/50"}`} />
+        <span className="truncate">{children}</span>
+      </Link>
+    </li>
   );
 }
 
