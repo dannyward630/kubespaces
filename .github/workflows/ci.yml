@@ -19,7 +19,17 @@ jobs:
           cache-dependency-path: api/go.sum
       - run: go build ./...
       - run: go vet ./...
-      - run: go test ./... -count=1
+      - name: Test with coverage
+        run: go test -count=1 -coverprofile=coverage.out -covermode=atomic ./...
+      - name: Summarize coverage
+        run: |
+          echo "### Go test coverage" >> "$GITHUB_STEP_SUMMARY"
+          go tool cover -func=coverage.out | tee -a "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: coverage-api
+          path: api/coverage.out
+          if-no-files-found: error
 
   operator:
     runs-on: ubuntu-latest
@@ -34,7 +44,17 @@ jobs:
           cache-dependency-path: operator/go.sum
       - run: go build ./...
       - run: go vet ./...
-      - run: go test ./... -race -count=1
+      - name: Test with coverage
+        run: go test -race -count=1 -coverprofile=coverage.out -covermode=atomic ./...
+      - name: Summarize coverage
+        run: |
+          echo "### Go test coverage" >> "$GITHUB_STEP_SUMMARY"
+          go tool cover -func=coverage.out | tee -a "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: coverage-operator
+          path: operator/coverage.out
+          if-no-files-found: error
       - name: Verify generated manifests are up to date
         run: |
           make manifests generate
@@ -53,7 +73,17 @@ jobs:
           cache-dependency-path: cli/go.sum
       - run: go build ./...
       - run: go vet ./...
-      - run: go test ./... -count=1
+      - name: Test with coverage
+        run: go test -count=1 -coverprofile=coverage.out -covermode=atomic ./...
+      - name: Summarize coverage
+        run: |
+          echo "### Go test coverage" >> "$GITHUB_STEP_SUMMARY"
+          go tool cover -func=coverage.out | tee -a "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: coverage-cli
+          path: cli/coverage.out
+          if-no-files-found: error
 
   frontend:
     runs-on: ubuntu-latest
